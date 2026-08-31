@@ -1,13 +1,25 @@
 {
-  "name": "ali-freddy-kouadio-portfolio",
+  "name": "portfolio-ali-freddy-kouadio",
   "type": "module",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "images": "node scripts/generer-images.mjs",
+    "acces": "node scripts/generer-acces.mjs"
   },
   "dependencies": {
-    "astro": "^4.16.0"
+    "@astrojs/sitemap": "^3.7.4",
+    "@astrojs/vercel": "^11.0.9",
+    "@fontsource-variable/fraunces": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@fontsource/public-sans": "^5.3.0",
+    "astro": "^7.2.10"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
   }
 }

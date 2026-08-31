@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  titre="Page introuvable — Ali Freddy Kouadio"
+  description="Cette page n'existe pas ou a été déplacée."
+  noindex
+>
+  <section class="page erreur">
+    <p class="label">Erreur 404</p>
+    <h1>Cette page n’existe pas.</h1>
+    <p class="erreur__texte">
+      Le lien est peut-être ancien, ou l’adresse comporte une faute de frappe.
+      Voici par où reprendre&nbsp;:
+    </p>
+    <ul class="erreur__liens">
+      <li><a href="/">Accueil</a></li>
+      <li><a href="/realisations">Les huit réalisations</a></li>
+      <li><a href="/a-propos">Parcours et manière de travailler</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .erreur {
+    padding-block: clamp(4rem, 12vw, 8rem) 4rem;
+    max-width: 52rem;
+  }
+
+  .erreur h1 {
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    letter-spacing: -0.03em;
+    margin-block: 0.9rem 1.1rem;
+  }
+
+  .erreur__texte {
+    color: var(--ink-2);
+    max-width: 48ch;
+  }
+
+  .erreur__liens {
+    display: grid;
+    gap: 0.65rem;
+    margin-top: 2rem;
+    max-width: 26rem;
+  }
+
+  .erreur__liens li {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.65rem;
+  }
+
+  .erreur__liens a {
+    font-weight: 600;
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .erreur__liens a:hover {
+    color: var(--accent-ink);
+    text-decoration: underline;
+  }
+</style>

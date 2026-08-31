@@ -1,0 +1,86 @@
+---
+import '../styles/global.css';
+import Entete from '../components/Entete.astro';
+import PiedDePage from '../components/PiedDePage.astro';
+import { identite } from '../data/profil';
+
+interface Props {
+  titre: string;
+  description: string;
+  /** Pages privées ou d'authentification : hors index, hors sitemap. */
+  noindex?: boolean;
+}
+
+const { titre, description, noindex = false } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og-image.png', Astro.site);
+
+const donneesStructurees = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: identite.nom,
+  jobTitle: identite.titre,
+  url: Astro.site?.href,
+  sameAs: [identite.github],
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Yamoussoukro',
+    addressCountry: 'CI',
+  },
+  knowsAbout: [
+    'Flutter',
+    'Dart',
+    'Next.js',
+    'Angular',
+    'Astro',
+    'TypeScript',
+    'PostgreSQL',
+    'Supabase',
+  ],
+};
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titre}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#12463C" />
+
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {!noindex && <link rel="sitemap" href="/sitemap-index.xml" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_CI" />
+    <meta property="og:site_name" content={identite.nom} />
+    <meta property="og:title" content={titre} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(donneesStructurees)}
+      is:inline
+    />
+  </head>
+
+  <body>
+    <a class="saut" href="#contenu">Aller au contenu</a>
+    <Entete />
+    <main id="contenu">
+      <slot />
+    </main>
+    <PiedDePage />
+  </body>
+</html>

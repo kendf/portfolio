@@ -1,0 +1,125 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CarteRealisation from '../../components/CarteRealisation.astro';
+
+// Les projets phares d'abord, puis du plus récent au plus ancien : un index
+// de portfolio doit ouvrir sur ce qui représente le mieux le travail.
+const realisations = (await getCollection('realisations')).sort((a, b) => {
+  if (a.data.phare !== b.data.phare) return a.data.phare ? -1 : 1;
+  return b.data.debut.localeCompare(a.data.debut);
+});
+
+const domaines = [...new Set(realisations.flatMap((r) => r.data.domaines))].sort(
+  (a, b) => a.localeCompare(b, 'fr'),
+);
+---
+
+<Base
+  titre="Réalisations — Ali Freddy Kouadio"
+  description="Huit projets livrés depuis 2024 : SaaS de facturation conforme DGI, marketplace éducative, portail hôtelier multi-marques, agent conversationnel WhatsApp, sites Angular et Astro."
+>
+  <section class="page tete">
+    <p class="label">Réalisations · 2024 — 2026</p>
+    <h1>Huit projets, du cadrage à l’exploitation.</h1>
+    <p class="tete__intro">
+      Chaque fiche ci-dessous indique le client, le problème traité, la solution livrée
+      et la pile technique. Le détail — architecture, décisions, arbitrages — se trouve
+      dans la fiche complète, protégée par un mot de passe.
+    </p>
+
+    <div class="acces">
+      <span class="acces__marque" aria-hidden="true"></span>
+      <p>
+        <strong>Pourquoi un mot de passe ?</strong>
+        Ces fiches décrivent l’architecture interne de systèmes appartenant à mes clients.
+        Vous êtes recruteur ou porteur de projet&nbsp;? <a href="/contact">Demandez-moi l’accès</a>,
+        je le communique volontiers.
+      </p>
+    </div>
+
+    <ul class="domaines" aria-label="Domaines couverts">
+      {domaines.map((d) => <li>{d}</li>)}
+    </ul>
+  </section>
+
+  <section class="page liste">
+    {realisations.map((r, i) => <CarteRealisation realisation={r} vedette={i === 0} />)}
+  </section>
+</Base>
+
+<style>
+  .tete {
+    padding-block: clamp(3rem, 8vw, 5rem) 2.5rem;
+  }
+
+  .tete h1 {
+    font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+    letter-spacing: -0.03em;
+    margin-block: 1rem 1.25rem;
+    max-width: 18ch;
+  }
+
+  .tete__intro {
+    color: var(--ink-2);
+    max-width: 60ch;
+    font-size: 1.05rem;
+  }
+
+  .acces {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    margin-top: 2rem;
+    padding: 1.1rem 1.35rem;
+    background: var(--accent-soft);
+    border-radius: var(--radius);
+    max-width: 66ch;
+  }
+
+  .acces__marque {
+    width: 3px;
+    align-self: stretch;
+    background: var(--accent);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .acces p {
+    font-size: 0.94rem;
+    color: var(--ink-2);
+  }
+
+  .acces strong {
+    color: var(--ink);
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  .acces a {
+    color: var(--accent-ink);
+    font-weight: 600;
+  }
+
+  .domaines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 2rem;
+  }
+
+  .domaines li {
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    color: var(--ink-2);
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+  }
+
+  .liste {
+    display: grid;
+    gap: 1.25rem;
+    padding-bottom: 2rem;
+  }
+</style>

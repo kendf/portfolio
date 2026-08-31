@@ -1,0 +1,272 @@
+---
+import Base from '../layouts/Base.astro';
+import TitreSection from '../components/TitreSection.astro';
+import {
+  identite,
+  presentation,
+  engagements,
+  experiences,
+  formations,
+  formationsAnterieures,
+} from '../data/profil';
+---
+
+<Base
+  titre="À propos — Ali Freddy Kouadio"
+  description="Parcours, manière de travailler et formation d'Ali Freddy Kouadio, développeur mobile et web à Yamoussoukro, Côte d'Ivoire."
+>
+  <section class="page intro">
+    <p class="label">À propos</p>
+    <h1>Développeur à Yamoussoukro, du cadrage à l’exploitation.</h1>
+    <div class="intro__texte">
+      {presentation.map((p) => <p>{p}</p>)}
+    </div>
+  </section>
+
+  <section class="bande">
+    <div class="page bloc">
+      <TitreSection
+        etiquette="Manière de travailler"
+        titre="Ce à quoi je m’engage"
+      />
+      <div class="engagements">
+        {
+          engagements.map((e) => (
+            <div class="engagement">
+              <h3>{e.titre}</h3>
+              <p>{e.texte}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="page bloc">
+    <TitreSection
+      etiquette="Parcours"
+      titre="Expérience"
+      intro="Six missions depuis fin 2024, entre MapDevs, le groupe HP Resort et la communauté des développeurs de Yamoussoukro."
+    />
+
+    <ol class="frise">
+      {
+        experiences.map((e) => (
+          <li class="frise__item">
+            <div class="frise__marque" aria-hidden="true" />
+            <div class="frise__contenu">
+              <p class="frise__periode">{e.periode}</p>
+              <h3>{e.role}</h3>
+              <p class="frise__org">
+                {e.org} · {e.lieu}
+              </p>
+              <ul>
+                {e.points.map((p) => (
+                  <li>{p}</li>
+                ))}
+              </ul>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="bande">
+    <div class="page bloc">
+      <TitreSection etiquette="Formation" titre="Diplômes et certificats" />
+
+      <ul class="formations">
+        {
+          formations.map((f) => (
+            <li>
+              <p class="formations__periode">{f.periode}</p>
+              <h3>{f.titre}</h3>
+              <p class="formations__org">{f.org}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="formations__avant">{formationsAnterieures}</p>
+
+      <a class="lien-cv" href={identite.cv} download>Télécharger le CV complet (PDF) →</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro {
+    padding-block: clamp(3rem, 8vw, 5rem) clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .intro h1 {
+    font-size: clamp(2.1rem, 5.4vw, 3.3rem);
+    letter-spacing: -0.03em;
+    margin-block: 0.9rem 1.5rem;
+    max-width: 20ch;
+  }
+
+  .intro__texte {
+    display: grid;
+    gap: 1.1rem;
+    max-width: 62ch;
+    color: var(--ink-2);
+    font-size: 1.03rem;
+  }
+
+  .bande {
+    background: var(--surface-2);
+    border-block: 1px solid var(--rule);
+  }
+
+  .bloc {
+    padding-block: clamp(3rem, 7vw, 4.5rem);
+  }
+
+  /* --- Engagements --- */
+
+  .engagements {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 2rem 2.5rem;
+  }
+
+  .engagement h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+    padding-top: 0.9rem;
+    border-top: 2px solid var(--accent);
+  }
+
+  .engagement p {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+
+  /* --- Frise --- */
+
+  .frise {
+    display: grid;
+    gap: 2.25rem;
+    padding-left: 1.6rem;
+    position: relative;
+  }
+
+  .frise::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 1px;
+    background: var(--rule-strong);
+  }
+
+  .frise__item {
+    position: relative;
+  }
+
+  .frise__marque {
+    position: absolute;
+    left: -1.6rem;
+    top: 0.45rem;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--ground);
+    border: 2px solid var(--accent);
+  }
+
+  .frise__periode {
+    font-family: var(--f-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.05em;
+    color: var(--accent-ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .frise__contenu h3 {
+    font-size: 1.18rem;
+  }
+
+  .frise__org {
+    color: var(--ink-3);
+    font-size: 0.92rem;
+    margin-block: 0.15rem 0.75rem;
+  }
+
+  .frise__contenu ul {
+    display: grid;
+    gap: 0.4rem;
+    max-width: 66ch;
+  }
+
+  .frise__contenu ul li {
+    position: relative;
+    padding-left: 1.1rem;
+    font-size: 0.95rem;
+    color: var(--ink-2);
+  }
+
+  .frise__contenu ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.68em;
+    width: 0.55rem;
+    height: 1px;
+    background: var(--rule-strong);
+  }
+
+  /* --- Formations --- */
+
+  .formations {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1.75rem 2.5rem;
+  }
+
+  .formations li {
+    border-left: 2px solid var(--rule-strong);
+    padding-left: 1.1rem;
+  }
+
+  .formations__periode {
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    color: var(--accent-ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .formations h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+  }
+
+  .formations__org {
+    color: var(--ink-2);
+    font-size: 0.9rem;
+  }
+
+  .formations__avant {
+    margin-top: 2rem;
+    font-family: var(--f-mono);
+    font-size: 0.8rem;
+    color: var(--ink-3);
+  }
+
+  .lien-cv {
+    display: inline-block;
+    margin-top: 2rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 0.15rem;
+  }
+
+  .lien-cv:hover {
+    color: var(--accent-ink);
+  }
+</style>

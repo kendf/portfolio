@@ -1,0 +1,252 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  realisation: CollectionEntry<'realisations'>;
+  /** Vrai pour la première carte de la page : traitement plus large. */
+  vedette?: boolean;
+}
+
+const { realisation, vedette = false } = Astro.props;
+const d = realisation.data;
+
+const libelleStatut = {
+  production: 'En production',
+  livre: 'Livré',
+  archive: 'Archivé',
+} as const;
+---
+
+<article class:list={['carte', { 'carte--vedette': vedette }]}>
+  <div class="carte__entete">
+    <p class="carte__client">{d.client}</p>
+    <span class:list={['statut', `statut--${d.statut}`]}>{libelleStatut[d.statut]}</span>
+  </div>
+
+  <h3 class="carte__titre">
+    <a href={`/realisations/${realisation.id}`}>{d.titre}</a>
+  </h3>
+
+  <p class="carte__periode">{d.periode} · {d.role}</p>
+  <p class="carte__resume">{d.resume}</p>
+
+  <dl class="carte__fiche">
+    <div>
+      <dt>Le problème</dt>
+      <dd>{d.probleme}</dd>
+    </div>
+    <div>
+      <dt>Le résultat</dt>
+      <dd>{d.resultat}</dd>
+    </div>
+  </dl>
+
+  <ul class="pile">
+    {d.stack.map((t) => <li>{t}</li>)}
+  </ul>
+
+  <div class="carte__pied">
+    <a class="carte__lien" href={`/realisations/${realisation.id}`}>
+      Lire la fiche détaillée
+      <span class="carte__cadenas" aria-hidden="true">·</span>
+      <span class="carte__acces">accès protégé</span>
+    </a>
+    {
+      d.lien && (
+        <a class="carte__externe" href={d.lien} target="_blank" rel="noopener noreferrer">
+          {d.lienTexte ?? 'Voir en ligne'} ↗
+        </a>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .carte {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: clamp(1.35rem, 3vw, 2rem);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .carte:hover {
+    border-color: var(--rule-strong);
+    box-shadow: var(--shadow);
+  }
+
+  .carte__entete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .carte__client {
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .statut {
+    font-family: var(--f-mono);
+    font-size: 0.67rem;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .statut--production {
+    background: var(--live-soft);
+    color: var(--live);
+  }
+
+  .statut--livre {
+    background: var(--primary-soft);
+    color: var(--primary);
+  }
+
+  .statut--archive {
+    background: var(--surface-3);
+    color: var(--ink-2);
+  }
+
+  .carte__titre {
+    font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+  }
+
+  .carte--vedette .carte__titre {
+    font-size: clamp(1.6rem, 3.4vw, 2.1rem);
+  }
+
+  .carte__titre a {
+    text-decoration: none;
+  }
+
+  /* La carte entière est cliquable, sans piéger le lien externe. */
+  .carte__titre a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .carte {
+    position: relative;
+  }
+
+  .carte__titre a:hover {
+    color: var(--accent-ink);
+  }
+
+  .carte__periode {
+    font-size: 0.86rem;
+    color: var(--ink-3);
+    margin-top: -0.5rem;
+  }
+
+  .carte__resume {
+    color: var(--ink-2);
+    max-width: 62ch;
+  }
+
+  .carte__fiche {
+    display: grid;
+    gap: 0.9rem;
+    margin: 0.3rem 0 0;
+    padding: 1rem 0 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .carte__fiche dt {
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: 0.25rem;
+  }
+
+  .carte__fiche dd {
+    margin: 0;
+    font-size: 0.93rem;
+    color: var(--ink-2);
+    max-width: 62ch;
+  }
+
+  .pile {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.35rem;
+  }
+
+  .pile li {
+    font-family: var(--f-mono);
+    font-size: 0.71rem;
+    color: var(--primary);
+    background: var(--primary-soft);
+    padding: 0.22rem 0.55rem;
+    border-radius: 4px;
+  }
+
+  .carte__pied {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 1.25rem;
+    margin-top: 0.6rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .carte__lien {
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .carte__lien:hover {
+    text-decoration: underline;
+  }
+
+  .carte__cadenas {
+    color: var(--rule-strong);
+    margin-inline: 0.15rem;
+  }
+
+  .carte__acces {
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    color: var(--ink-3);
+  }
+
+  .carte__externe {
+    position: relative;
+    z-index: 1;
+    font-size: 0.88rem;
+    color: var(--accent-ink);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .carte__externe:hover {
+    text-decoration: underline;
+  }
+
+  @media (min-width: 720px) {
+    .carte__fiche {
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+  }
+</style>

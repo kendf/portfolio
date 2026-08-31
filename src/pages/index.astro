@@ -1,643 +1,366 @@
 ---
-const services = [
-  {
-    name: "École Facile",
-    org: "MapDevs",
-    period: "Juin — Août 2026",
-    desc: "Marketplace mobile & web qui connecte parents et répétiteurs certifiés, avec suivi de la progression scolaire en temps réel.",
-    tags: ["Flutter", "Supabase", "Riverpod", "GoRouter"],
-    status: "up",
-  },
-  {
-    name: "SONAPIE — Portail 3",
-    org: "HP Resort",
-    period: "Nov. 2025 — Avr. 2026",
-    desc: "Hub multi-app pour la gestion des ordres de travaux et l'élection du meilleur employé, sur infrastructure auto-gérée.",
-    tags: ["Flutter", "API REST", "Supabase self-hosted", "Ubuntu"],
-    status: "up",
-  },
-  {
-    name: "HP Resort — Site & réservation",
-    org: "HP Resort",
-    period: "Mai — Juil. 2026",
-    desc: "Site vitrine de l'hôtel avec système de réservation intégré.",
-    tags: ["Web", "Réservation"],
-    status: "up",
-  },
-  {
-    name: "INVOICECI",
-    org: "MapDevs",
-    period: "Fév. — Juin 2026",
-    desc: "SaaS de facturation normalisée électronique (FNE), conforme à la réglementation de la DGI.",
-    tags: ["SaaS", "Facturation", "FNE"],
-    status: "up",
-  },
-  {
-    name: "Convertisseur de devises",
-    org: "DevFest GDG Yakro",
-    period: "Déc. 2024",
-    desc: "Application mobile développée en direct lors du DevFest de Yamoussoukro.",
-    tags: ["Flutter", "Événementiel"],
-    status: "archived",
-  },
-];
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import TitreSection from '../components/TitreSection.astro';
+import CarteRealisation from '../components/CarteRealisation.astro';
+import { identite, presentation, engagements, competences } from '../data/profil';
 
-const experience = [
-  {
-    role: "Développeur Flutter",
-    org: "MapDevs — Yamoussoukro",
-    period: "Juin 2026 — Août 2026",
-    bullets: [
-      "Développement d'École Facile, application de mise en relation parents / répétiteurs (mobile et web)",
-      "Conception d'une recherche de répétiteurs par localité",
-      "Mise en place du suivi de la progression scolaire en temps réel",
-    ],
-  },
-  {
-    role: "Développeur",
-    org: "HP Resort — Yamoussoukro",
-    period: "Mai 2026 — Juil. 2026",
-    bullets: ["Création du site web de l'hôtel avec système de réservation intégré"],
-  },
-  {
-    role: "Développeur",
-    org: "MapDevs — Yamoussoukro",
-    period: "Fév. 2026 — Juin 2026",
-    bullets: ["Création du SaaS INVOICECI.COM, facturation normalisée électronique (FNE) conforme DGI"],
-  },
-  {
-    role: "Stage développeur — Portail SONAPIE 3",
-    org: "HP Resort — Yamoussoukro",
-    period: "Nov. 2025 — Avr. 2026",
-    bullets: [
-      "Développement d'un hub multi-app (ordres de travaux, vote du meilleur employé)",
-      "Intégration d'une API REST pour la gestion des ordres et du vote",
-      "Mise en place de tests unitaires pour la qualité du code",
-      "Base de données Supabase self-hosted sur serveur Ubuntu dédié",
-    ],
-  },
-  {
-    role: "Intervenant",
-    org: "DevFest GDG Yakro",
-    period: "Déc. 2024",
-    bullets: ["Création d'une application mobile de conversion de devises"],
-  },
-];
+const toutes = await getCollection('realisations');
+const phares = toutes
+  .filter((r) => r.data.phare)
+  .sort((a, b) => b.data.debut.localeCompare(a.data.debut));
 
-const skills = [
-  { group: "Mobile", items: ["Flutter", "Dart"] },
-  { group: "Web", items: ["HTML", "CSS", "JavaScript", "Angular"] },
-  { group: "Intégration & outils", items: ["API REST", "Tests unitaires", "Supabase self-hosted", "Serveur Ubuntu"] },
-];
-
-const education = [
-  { title: "Certificat Dart Avancé", org: "NextFlutter", period: "Juil. — Août 2026" },
-  { title: "Licence", org: "Institut International Polytechnique des Élites, Yamoussoukro", period: "Oct. 2024 — Sept. 2025" },
-  { title: "BTS", org: "Institut International Polytechnique des Élites, Abidjan", period: "Oct. 2022 — Juil. 2024 · en cours de validation" },
-];
+const enProduction = toutes.filter((r) => r.data.statut === 'production').length;
 ---
 
-<!doctype html>
-<html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ali Freddy Kouadio — Développeur Flutter, Mobile & Web</title>
-    <meta
-      name="description"
-      content="Ali Freddy Kouadio, développeur Flutter basé à Yamoussoukro (Côte d'Ivoire). Applications mobiles et web en production : marketplaces, plateformes de vote, SaaS de facturation."
+<Base
+  titre={`${identite.nom} — ${identite.titre}`}
+  description="Développeur mobile et web à Yamoussoukro. Applications Flutter, Next.js et Angular en production : facturation conforme DGI, marketplace éducative, portail hôtelier, agent conversationnel WhatsApp."
+>
+  <!-- ================= Ouverture ================= -->
+  <section class="page ouverture">
+    <p class="label ouverture__lieu">{identite.ville}</p>
+
+    <h1 class="ouverture__titre">
+      Je construis des logiciels qui <em>tiennent</em> en production.
+    </h1>
+
+    <div class="ouverture__corps">
+      <p class="ouverture__lede">
+        {identite.nom}, développeur mobile et web. {identite.accroche}.
+      </p>
+      <p class="ouverture__texte">{presentation[0]}</p>
+    </div>
+
+    <div class="ouverture__actions">
+      <a class="bouton bouton--plein" href="/realisations">Voir les réalisations</a>
+      <a class="bouton bouton--vide" href="/contact">Me contacter</a>
+      <a class="bouton bouton--nu" href={identite.cv} download>Télécharger le CV</a>
+    </div>
+
+    <dl class="preuves">
+      <div>
+        <dt>{toutes.length}</dt>
+        <dd>projets livrés depuis 2024</dd>
+      </div>
+      <div>
+        <dt>{enProduction}</dt>
+        <dd>encore en service aujourd’hui</dd>
+      </div>
+      <div>
+        <dt>4</dt>
+        <dd>plateformes : Android, Windows, web, WhatsApp</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- ================= Projets phares ================= -->
+  <section class="page bloc">
+    <TitreSection
+      etiquette="Sélection"
+      titre="Trois projets qui résument mon travail"
+      intro="Un produit réglementaire, une infrastructure auto-hébergée, un agent conversationnel. L'index complet contient cinq autres réalisations."
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <header class="nav">
-      <a href="#top" class="nav__brand">AFK<span class="dot">.</span></a>
-      <nav class="nav__links">
-        <a href="#systems">Systèmes</a>
-        <a href="#experience">Expérience</a>
-        <a href="#skills">Compétences</a>
-        <a href="#education">Formation</a>
-      </nav>
-      <a class="btn btn--ghost nav__cv" href="/CV_Ali_Freddy_Kouadio.pdf" download>Télécharger le CV</a>
-    </header>
 
-    <main id="top">
-      <section class="hero">
-        <p class="eyebrow">STATUT · YAMOUSSOUKRO, CÔTE D'IVOIRE</p>
-        <h1>Ali Freddy Kouadio</h1>
-        <p class="hero__role">Développeur Flutter — Mobile &amp; Web</p>
-        <p class="hero__lede">
-          Je conçois et maintiens des applications mobiles et web de bout en bout — de l'intégration d'API
-          jusqu'à la mise en production — avec une préférence pour Flutter et une attention particulière
-          portée à la fiabilité des systèmes que je livre.
-        </p>
+    <div class="liste">
+      {phares.map((r, i) => <CarteRealisation realisation={r} vedette={i === 0} />)}
+    </div>
 
-        <div class="terminal" aria-label="Résumé des systèmes en production">
-          <div class="terminal__bar">
-            <span class="terminal__dot terminal__dot--r"></span>
-            <span class="terminal__dot terminal__dot--y"></span>
-            <span class="terminal__dot terminal__dot--g"></span>
-            <span class="terminal__title">status --all</span>
-          </div>
-          <div class="terminal__body">
-            {services.filter(s => s.status === "up").map((s) => (
-              <p class="terminal__line"><span class="status-dot status-dot--up"></span>{s.name}<span class="terminal__pad"></span>opérationnel</p>
-            ))}
-            <p class="terminal__summary">
-              <span id="uptime-days">—</span> jours de développement sur le terrain · 0 incident actif
-            </p>
-          </div>
-        </div>
+    <a class="bloc__suite" href="/realisations">
+      Voir les {toutes.length} réalisations →
+    </a>
+  </section>
 
-        <div class="hero__cta">
-          <a class="btn btn--primary" href="#systems">Voir les systèmes</a>
-          <a class="btn btn--ghost" href="/CV_Ali_Freddy_Kouadio.pdf" download>Télécharger le CV</a>
-          <a class="btn btn--ghost" href="mailto:Kenfred1702@gmail.com">Écrire un email</a>
-        </div>
-      </section>
+  <!-- ================= Engagements ================= -->
+  <section class="bande">
+    <div class="page bloc">
+      <TitreSection
+        etiquette="Manière de travailler"
+        titre="Ce à quoi je m’engage"
+        intro="Quatre principes que je ne négocie pas, parce qu’ils décident de la qualité d’un produit longtemps après la livraison."
+      />
 
-      <section id="systems" class="section">
-        <p class="section__eyebrow">Systèmes en production</p>
-        <h2 class="section__title">Ce que je fais tourner</h2>
-        <div class="grid">
-          {services.map((s) => (
-            <article class="card">
-              <div class="card__head">
-                <h3>{s.name}</h3>
-                <span class={`status-pill status-pill--${s.status}`}>
-                  <span class={`status-dot status-dot--${s.status}`}></span>
-                  {s.status === "up" ? "opérationnel" : "archivé"}
-                </span>
-              </div>
-              <p class="card__meta">{s.org} · {s.period}</p>
-              <p class="card__desc">{s.desc}</p>
-              <ul class="tags">
-                {s.tags.map((t) => <li>{t}</li>)}
-              </ul>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section id="experience" class="section">
-        <p class="section__eyebrow">Journal</p>
-        <h2 class="section__title">Expérience</h2>
-        <ol class="timeline">
-          {experience.map((e) => (
-            <li class="timeline__item">
-              <div class="timeline__marker"></div>
-              <div class="timeline__content">
-                <p class="timeline__period">{e.period}</p>
-                <h3>{e.role}</h3>
-                <p class="timeline__org">{e.org}</p>
-                <ul>
-                  {e.bullets.map((b) => <li>{b}</li>)}
-                </ul>
+      <ol class="engagements">
+        {
+          engagements.map((e, i) => (
+            <li class="engagement">
+              <span class="engagement__rang" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <h3>{e.titre}</h3>
+                <p>{e.texte}</p>
               </div>
             </li>
-          ))}
-        </ol>
-      </section>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
 
-      <section id="skills" class="section">
-        <p class="section__eyebrow">Configuration</p>
-        <h2 class="section__title">Compétences</h2>
-        <div class="skills">
-          {skills.map((group) => (
-            <div class="skills__group">
-              <h3>{group.group}</h3>
-              <ul class="tags tags--lg">
-                {group.items.map((i) => <li>{i}</li>)}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
+  <!-- ================= Compétences ================= -->
+  <section class="page bloc">
+    <TitreSection
+      etiquette="Boîte à outils"
+      titre="Compétences"
+      intro="Rien ici qui ne soit utilisé dans au moins un projet livré."
+    />
 
-      <section id="education" class="section">
-        <p class="section__eyebrow">Historique</p>
-        <h2 class="section__title">Formation</h2>
-        <ul class="education">
-          {education.map((ed) => (
-            <li>
-              <p class="education__period">{ed.period}</p>
-              <h3>{ed.title}</h3>
-              <p class="education__org">{ed.org}</p>
-            </li>
-          ))}
-        </ul>
-        <p class="education__extra">+ Baccalauréat (2022) · BEPC (2018) · CEPE (2014)</p>
-      </section>
-    </main>
+    <div class="competences">
+      {
+        competences.map((g) => (
+          <div class="competence">
+            <h3>{g.groupe}</h3>
+            <ul>
+              {g.items.map((i) => (
+                <li>{i}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Base>
 
-    <footer id="contact" class="footer">
-      <div class="footer__main">
-        <h2>Discutons de votre prochain système.</h2>
-        <p>Disponible pour des missions de développement mobile et web, à Yamoussoukro ou à distance.</p>
-        <a class="btn btn--primary" href="mailto:Kenfred1702@gmail.com">Kenfred1702@gmail.com</a>
-      </div>
-      <div class="footer__meta">
-        <p>07 11 60 12 52</p>
-        <p>Yamoussoukro, Côte d'Ivoire</p>
-        <p><a href="https://github.com/kendf" target="_blank" rel="noopener">github.com/kendf</a></p>
-        <p>LinkedIn — Kouadio Freddy Kenndy</p>
-      </div>
-      <p class="footer__legal">© 2026 Ali Freddy Kouadio.</p>
-    </footer>
+<style>
+  /* ---------------- Ouverture ---------------- */
 
-    <script>
-      const start = new Date("2025-11-01T00:00:00");
-      const el = document.getElementById("uptime-days");
-      if (el) {
-        const days = Math.floor((Date.now() - start.getTime()) / 86400000);
-        el.textContent = days.toString();
-      }
-    </script>
+  .ouverture {
+    padding-block: clamp(3.5rem, 9vw, 6rem) clamp(2rem, 4vw, 3rem);
+  }
 
-    <style is:global>
-      :root {
-        --bg: #0d1321;
-        --surface: #151d30;
-        --surface-2: #1b2540;
-        --border: #26314f;
-        --text: #eceef5;
-        --muted: #8991a8;
-        --accent: #e3a64f;
-        --accent-soft: rgba(227, 166, 79, 0.14);
-        --ok: #5fae7c;
-        --archived: #6b7386;
+  .ouverture__lieu {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 1.75rem;
+  }
 
-        --font-display: "Sora", sans-serif;
-        --font-body: "Inter", sans-serif;
-        --font-mono: "IBM Plex Mono", monospace;
-      }
+  .ouverture__lieu::before {
+    content: '';
+    width: 1.75rem;
+    height: 2px;
+    background: var(--accent);
+  }
 
-      * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
+  .ouverture__titre {
+    font-size: clamp(2.2rem, 7vw, 4.75rem);
+    font-weight: 600;
+    letter-spacing: -0.032em;
+    line-height: 1.03;
+    max-width: 16ch;
+    /* Sans cette limite, un mot long déborde la fenêtre sur petit écran. */
+    overflow-wrap: break-word;
+  }
 
-      body {
-        margin: 0;
-        background: var(--bg);
-        color: var(--text);
-        font-family: var(--font-body);
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-      }
+  .ouverture__titre em {
+    font-style: italic;
+    color: var(--accent-ink);
+    font-variation-settings: 'SOFT' 20, 'WONK' 1;
+  }
 
-      a { color: inherit; }
+  .ouverture__corps {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
+    max-width: 62ch;
+  }
 
-      h1, h2, h3 {
-        font-family: var(--font-display);
-        margin: 0;
-        letter-spacing: -0.01em;
-      }
+  .ouverture__lede {
+    font-size: clamp(1.08rem, 2vw, 1.25rem);
+    color: var(--ink);
+    font-weight: 500;
+  }
 
-      ul { list-style: none; margin: 0; padding: 0; }
+  .ouverture__texte {
+    color: var(--ink-2);
+  }
 
-      :focus-visible {
-        outline: 2px solid var(--accent);
-        outline-offset: 3px;
-      }
+  .ouverture__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+  }
 
-      .nav {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 1.1rem clamp(1.25rem, 5vw, 4rem);
-        background: rgba(13, 19, 33, 0.85);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid var(--border);
-      }
-      .nav__brand {
-        font-family: var(--font-mono);
-        font-weight: 600;
-        text-decoration: none;
-        font-size: 1.05rem;
-      }
-      .nav__brand .dot { color: var(--accent); }
-      .nav__links {
-        display: flex;
-        gap: 1.75rem;
-        font-family: var(--font-mono);
-        font-size: 0.85rem;
-      }
-      .nav__links a { text-decoration: none; color: var(--muted); }
-      .nav__links a:hover { color: var(--text); }
-      .nav__cv { font-size: 0.8rem; padding: 0.5rem 0.9rem; }
+  /* Filets horizontaux seulement : une grille en « fausses gouttières »
+     laisse une cellule vide colorée dès que le nombre de colonnes change. */
+  .preuves {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    column-gap: 2.5rem;
+    margin-top: 3.25rem;
+    border-top: 1px solid var(--rule);
+  }
 
-      @media (max-width: 720px) {
-        .nav__links { display: none; }
-      }
+  .preuves > div {
+    padding-block: 1.35rem 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
 
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--font-mono);
-        font-size: 0.85rem;
-        font-weight: 500;
-        text-decoration: none;
-        padding: 0.75rem 1.3rem;
-        border-radius: 6px;
-        border: 1px solid transparent;
-        transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
-      }
-      .btn--primary { background: var(--accent); color: #17110a; }
-      .btn--primary:hover { transform: translateY(-1px); }
-      .btn--ghost { border-color: var(--border); color: var(--text); }
-      .btn--ghost:hover { border-color: var(--accent); color: var(--accent); }
+  .preuves dt {
+    font-family: var(--f-display);
+    font-size: 2.6rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--primary);
+    font-variant-numeric: tabular-nums;
+  }
 
-      .hero {
-        padding: clamp(4rem, 10vw, 7rem) clamp(1.25rem, 5vw, 4rem) 3rem;
-        max-width: 920px;
-      }
-      .eyebrow {
-        font-family: var(--font-mono);
-        font-size: 0.8rem;
-        color: var(--accent);
-        letter-spacing: 0.08em;
-        margin: 0 0 1rem;
-      }
-      .hero h1 {
-        font-size: clamp(2.6rem, 6vw, 4.2rem);
-        font-weight: 800;
-      }
-      .hero__role {
-        font-family: var(--font-mono);
-        color: var(--muted);
-        font-size: clamp(1rem, 2vw, 1.2rem);
-        margin: 0.6rem 0 1.4rem;
-      }
-      .hero__lede {
-        max-width: 60ch;
-        color: #c4c9d6;
-        font-size: 1.05rem;
-      }
+  .preuves dd {
+    margin: 0.5rem 0 0;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--ink-2);
+    max-width: 22ch;
+  }
 
-      .terminal {
-        margin: 2.25rem 0 2rem;
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        overflow: hidden;
-        max-width: 620px;
-      }
-      .terminal__bar {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        padding: 0.65rem 0.9rem;
-        background: var(--surface-2);
-        border-bottom: 1px solid var(--border);
-      }
-      .terminal__dot { width: 9px; height: 9px; border-radius: 50%; }
-      .terminal__dot--r { background: #e2665f; }
-      .terminal__dot--y { background: #e3b34f; }
-      .terminal__dot--g { background: var(--ok); }
-      .terminal__title {
-        font-family: var(--font-mono);
-        font-size: 0.75rem;
-        color: var(--muted);
-        margin-left: 0.5rem;
-      }
-      .terminal__body { padding: 1rem 1.1rem 1.15rem; }
-      .terminal__line {
-        display: flex;
-        align-items: center;
-        font-family: var(--font-mono);
-        font-size: 0.85rem;
-        margin: 0.3rem 0;
-        color: #d7dbe6;
-      }
-      .terminal__pad { flex: 1; }
-      .terminal__summary {
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        color: var(--muted);
-        margin: 0.8rem 0 0;
-        padding-top: 0.7rem;
-        border-top: 1px dashed var(--border);
-      }
-      #uptime-days { color: var(--accent); }
+  /* ---------------- Boutons ---------------- */
 
-      .status-dot {
-        display: inline-block;
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        margin-right: 0.6rem;
-        flex-shrink: 0;
-      }
-      .status-dot--up { background: var(--ok); box-shadow: 0 0 0 3px rgba(95, 174, 124, 0.15); }
-      .status-dot--archived { background: var(--archived); }
+  .bouton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
 
-      .hero__cta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        margin-top: 0.5rem;
-      }
+  .bouton--plein {
+    background: var(--primary);
+    color: var(--on-primary);
+  }
 
-      .section {
-        padding: 3.5rem clamp(1.25rem, 5vw, 4rem);
-        max-width: 1100px;
-        margin: 0 auto;
-        border-top: 1px solid var(--border);
-      }
-      .section__eyebrow {
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        color: var(--accent);
-        letter-spacing: 0.08em;
-        margin: 0 0 0.5rem;
-      }
-      .section__title {
-        font-size: clamp(1.6rem, 3vw, 2.1rem);
-        margin-bottom: 2rem;
-      }
+  .bouton--plein:hover {
+    background: var(--primary-hover);
+  }
 
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 1.1rem;
-      }
-      .card {
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 1.4rem;
-        display: flex;
-        flex-direction: column;
-        gap: 0.6rem;
-        transition: border-color 0.15s ease, transform 0.15s ease;
-      }
-      .card:hover { border-color: var(--accent); transform: translateY(-2px); }
-      .card__head {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 0.6rem;
-      }
-      .card__head h3 { font-size: 1.05rem; }
-      .status-pill {
-        font-family: var(--font-mono);
-        font-size: 0.68rem;
-        display: inline-flex;
-        align-items: center;
-        white-space: nowrap;
-        padding: 0.2rem 0.5rem;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        color: var(--muted);
-      }
-      .card__meta {
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        color: var(--muted);
-        margin: 0;
-      }
-      .card__desc { font-size: 0.92rem; color: #c4c9d6; margin: 0; }
+  .bouton--vide {
+    border-color: var(--rule-strong);
+    color: var(--ink);
+  }
 
-      .tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        margin-top: 0.3rem;
-      }
-      .tags li {
-        font-family: var(--font-mono);
-        font-size: 0.72rem;
-        color: var(--text);
-        background: var(--accent-soft);
-        border: 1px solid rgba(227, 166, 79, 0.3);
-        padding: 0.2rem 0.55rem;
-        border-radius: 5px;
-      }
-      .tags--lg li { font-size: 0.82rem; padding: 0.4rem 0.75rem; }
+  .bouton--vide:hover {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+  }
 
-      .timeline { position: relative; padding-left: 1.6rem; }
-      .timeline::before {
-        content: "";
-        position: absolute;
-        left: 5px;
-        top: 6px;
-        bottom: 6px;
-        width: 1px;
-        background: var(--border);
-      }
-      .timeline__item { position: relative; padding-bottom: 2.1rem; }
-      .timeline__item:last-child { padding-bottom: 0; }
-      .timeline__marker {
-        position: absolute;
-        left: -1.6rem;
-        top: 6px;
-        width: 11px;
-        height: 11px;
-        border-radius: 50%;
-        background: var(--bg);
-        border: 2px solid var(--accent);
-      }
-      .timeline__period {
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        color: var(--accent);
-        margin: 0 0 0.3rem;
-      }
-      .timeline__content h3 { font-size: 1.05rem; margin-bottom: 0.15rem; }
-      .timeline__org { color: var(--muted); font-size: 0.9rem; margin: 0 0 0.6rem; }
-      .timeline__content ul { display: flex; flex-direction: column; gap: 0.3rem; }
-      .timeline__content li {
-        font-size: 0.92rem;
-        color: #c4c9d6;
-        padding-left: 1rem;
-        position: relative;
-      }
-      .timeline__content li::before {
-        content: "—";
-        position: absolute;
-        left: 0;
-        color: var(--muted);
-      }
+  .bouton--nu {
+    color: var(--accent-ink);
+    padding-inline: 0.5rem;
+  }
 
-      .skills {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1.75rem;
-      }
-      .skills__group h3 {
-        font-family: var(--font-mono);
-        font-size: 0.9rem;
-        color: var(--muted);
-        font-weight: 500;
-        margin-bottom: 0.8rem;
-      }
+  .bouton--nu:hover {
+    text-decoration: underline;
+  }
 
-      .education {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 1rem;
-      }
-      .education li {
-        border-left: 2px solid var(--border);
-        padding-left: 1rem;
-      }
-      .education__period {
-        font-family: var(--font-mono);
-        font-size: 0.75rem;
-        color: var(--accent);
-        margin: 0 0 0.3rem;
-      }
-      .education h3 { font-size: 1rem; margin-bottom: 0.15rem; }
-      .education__org { color: var(--muted); font-size: 0.88rem; margin: 0; }
-      .education__extra {
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        color: var(--muted);
-      }
+  /* ---------------- Blocs ---------------- */
 
-      .footer {
-        padding: 4rem clamp(1.25rem, 5vw, 4rem) 2.5rem;
-        border-top: 1px solid var(--border);
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        gap: 2.5rem;
-      }
-      .footer__main { max-width: 480px; }
-      .footer__main h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 0.7rem; }
-      .footer__main p { color: var(--muted); margin: 0 0 1.4rem; }
-      .footer__meta {
-        font-family: var(--font-mono);
-        font-size: 0.85rem;
-        color: var(--muted);
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      .footer__meta a { text-decoration: none; }
-      .footer__meta a:hover { color: var(--accent); }
-      .footer__legal {
-        width: 100%;
-        font-family: var(--font-mono);
-        font-size: 0.72rem;
-        color: #545c72;
-        margin-top: 1rem;
-      }
+  .bloc {
+    padding-block: clamp(3rem, 7vw, 5rem);
+  }
 
-      @media (prefers-reduced-motion: reduce) {
-        html { scroll-behavior: auto; }
-        .card, .btn { transition: none; }
-      }
-    </style>
-  </body>
-</html>
+  /* Bande pleine largeur : le fond déborde, le contenu reste dans la grille. */
+  .bande {
+    background: var(--surface-2);
+    border-block: 1px solid var(--rule);
+  }
+
+  .liste {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .bloc__suite {
+    display: inline-block;
+    margin-top: 2rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 0.15rem;
+  }
+
+  .bloc__suite:hover {
+    color: var(--accent-ink);
+  }
+
+  /* ---------------- Engagements ---------------- */
+
+  .engagements {
+    display: grid;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .engagement {
+    display: grid;
+    grid-template-columns: 3.25rem 1fr;
+    gap: 0.5rem 1rem;
+    background: var(--surface);
+    padding: 1.6rem clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .engagement__rang {
+    font-family: var(--f-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    padding-top: 0.28rem;
+  }
+
+  .engagement h3 {
+    font-size: 1.18rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .engagement p {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+    max-width: 62ch;
+  }
+
+  @media (min-width: 900px) {
+    .engagements {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* ---------------- Compétences ---------------- */
+
+  .competences {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 2rem 2.5rem;
+  }
+
+  .competence h3 {
+    font-family: var(--f-mono);
+    font-size: 0.74rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    padding-bottom: 0.6rem;
+    margin-bottom: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .competence ul {
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .competence li {
+    font-size: 0.93rem;
+    color: var(--ink-2);
+  }
+</style>

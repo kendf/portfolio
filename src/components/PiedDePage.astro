@@ -1,0 +1,135 @@
+---
+import { identite } from '../data/profil';
+
+const annee = new Date().getFullYear();
+---
+
+<footer class="pied" id="pied">
+  <div class="page pied__inner">
+    <div class="pied__appel">
+      <p class="label">Prendre contact</p>
+      <h2>Parlons de ce que vous voulez construire.</h2>
+      <p class="pied__dispo">{identite.disponibilite}</p>
+      <a class="pied__cta" href="/contact">Voir mes coordonnées</a>
+    </div>
+
+    <div class="pied__liens">
+      <div>
+        <p class="label label--quiet">Site</p>
+        <ul>
+          <li><a href="/realisations">Réalisations</a></li>
+          <li><a href="/a-propos">À propos</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href={identite.cv} download>Curriculum vitæ</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="label label--quiet">Ailleurs</p>
+        <ul>
+          <li>
+            <a href={identite.github} target="_blank" rel="noopener noreferrer">
+              {identite.githubTexte}
+            </a>
+          </li>
+          <li>LinkedIn — {identite.linkedin}</li>
+          <li>{identite.ville}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page pied__bas">
+    <p>© {annee} {identite.nom}</p>
+    <p>Construit avec Astro · hébergé sur Vercel</p>
+  </div>
+</footer>
+
+<style>
+  .pied {
+    margin-top: 6rem;
+    background: var(--surface-2);
+    border-top: 1px solid var(--rule);
+    padding-top: clamp(3rem, 7vw, 5rem);
+  }
+
+  .pied__inner {
+    display: grid;
+    gap: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .pied__appel h2 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    margin-block: 0.6rem 0.75rem;
+    max-width: 18ch;
+  }
+
+  .pied__dispo {
+    color: var(--ink-2);
+    max-width: 40ch;
+    margin-bottom: 1.5rem;
+  }
+
+  .pied__cta {
+    display: inline-block;
+    background: var(--primary);
+    color: var(--on-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius);
+    transition: background 0.15s ease;
+  }
+
+  .pied__cta:hover {
+    background: var(--primary-hover);
+  }
+
+  .pied__liens {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 2rem;
+  }
+
+  .pied__liens ul {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+  }
+
+  .pied__liens li {
+    font-size: 0.92rem;
+    color: var(--ink-2);
+  }
+
+  .pied__liens a {
+    text-decoration: none;
+    color: var(--ink-2);
+  }
+
+  .pied__liens a:hover {
+    color: var(--accent-ink);
+    text-decoration: underline;
+  }
+
+  .pied__bas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-block: 1.4rem;
+    border-top: 1px solid var(--rule-strong);
+    font-family: var(--f-mono);
+    font-size: 0.74rem;
+    /* --ink-3 : 4,8:1 sur le sable, contrairement au gris du site précédent. */
+    color: var(--ink-3);
+  }
+
+  @media (min-width: 900px) {
+    .pied__inner {
+      grid-template-columns: 1.4fr 1fr;
+      gap: 4rem;
+    }
+  }
+</style>

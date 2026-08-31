@@ -1,0 +1,180 @@
+---
+import Base from '../layouts/Base.astro';
+import { nettoyerRedirection } from '../lib/acces';
+
+// Lit des paramètres de requête : rendu à la demande obligatoire.
+export const prerender = false;
+
+const vers = nettoyerRedirection(Astro.url.searchParams.get('vers'));
+const code = Astro.url.searchParams.get('erreur');
+
+const messages: Record<string, string> = {
+  vide: 'Saisissez le mot de passe pour continuer.',
+  faux: 'Mot de passe incorrect. Vérifiez la saisie, ou demandez-moi l’accès.',
+  trop: 'Trop de tentatives. Réessayez dans une quinzaine de minutes.',
+  config: 'L’accès n’est pas configuré sur ce serveur. Écrivez-moi, je le rouvre.',
+};
+
+const erreur = code ? (messages[code] ?? messages.faux) : null;
+
+Astro.response.headers.set('Cache-Control', 'no-store');
+---
+
+<Base
+  titre="Accès aux fiches détaillées — Ali Freddy Kouadio"
+  description="Espace protégé du portfolio."
+  noindex
+>
+  <section class="page acces">
+    <div class="carte">
+      <span class="carte__marque" aria-hidden="true"></span>
+
+      <p class="label">Espace protégé</p>
+      <h1>Fiche détaillée</h1>
+      <p class="carte__intro">
+        Cette fiche décrit l’architecture interne d’un système appartenant à un client.
+        Elle est réservée aux personnes à qui j’ai communiqué le mot de passe.
+      </p>
+
+      <form method="POST" action="/api/acces" class="formulaire">
+        <input type="hidden" name="vers" value={vers} />
+
+        <label for="motdepasse">Mot de passe</label>
+        <input
+          id="motdepasse"
+          name="motdepasse"
+          type="password"
+          autocomplete="current-password"
+          required
+          autofocus
+          aria-describedby={erreur ? 'erreur' : undefined}
+          aria-invalid={erreur ? 'true' : undefined}
+        />
+
+        {
+          erreur && (
+            <p class="erreur" id="erreur" role="alert">
+              {erreur}
+            </p>
+          )
+        }
+
+        <button type="submit">Ouvrir la fiche</button>
+      </form>
+
+      <p class="carte__aide">
+        Pas de mot de passe&nbsp;? <a href="/contact">Demandez-le-moi</a> — je réponds vite.
+        En attendant, <a href="/realisations">l’index des réalisations</a> est public et
+        détaille le problème traité et le résultat de chaque projet.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .acces {
+    display: grid;
+    place-items: center;
+    padding-block: clamp(2.5rem, 8vw, 5rem) 4rem;
+  }
+
+  .carte {
+    position: relative;
+    width: 100%;
+    max-width: 30rem;
+    background: var(--surface);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    padding: clamp(1.75rem, 5vw, 2.75rem);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .carte__marque {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: var(--accent);
+  }
+
+  .carte h1 {
+    font-size: clamp(1.7rem, 4vw, 2.15rem);
+    margin-block: 0.5rem 0.85rem;
+  }
+
+  .carte__intro {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+
+  .formulaire {
+    display: grid;
+    gap: 0.5rem;
+    margin-block: 1.85rem 1.5rem;
+  }
+
+  label {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  input {
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--ground);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    padding: 0.75rem 0.9rem;
+    width: 100%;
+  }
+
+  input:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+    border-color: var(--primary);
+  }
+
+  input[aria-invalid='true'] {
+    border-color: var(--accent);
+  }
+
+  .erreur {
+    font-size: 0.88rem;
+    color: var(--accent-ink);
+    background: var(--accent-soft);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.8rem;
+  }
+
+  button {
+    margin-top: 0.4rem;
+    font-family: inherit;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--on-primary);
+    background: var(--primary);
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.85rem 1.25rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  button:hover {
+    background: var(--primary-hover);
+  }
+
+  .carte__aide {
+    font-size: 0.88rem;
+    color: var(--ink-2);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .carte__aide a {
+    color: var(--accent-ink);
+    font-weight: 500;
+  }
+</style>

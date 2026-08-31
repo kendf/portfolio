@@ -1,0 +1,344 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+// Rendu à la demande : c'est ce qui permet au middleware d'intercepter la
+// requête avant que le moindre octet de contenu privé ne soit produit.
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+const realisations = await getCollection('realisations');
+const realisation = realisations.find((r) => r.id === slug);
+
+if (!realisation) {
+  return Astro.redirect('/realisations', 302);
+}
+
+const { Content } = await render(realisation);
+const d = realisation.data;
+
+const index = realisations
+  .sort((a, b) => b.data.debut.localeCompare(a.data.debut))
+  .findIndex((r) => r.id === realisation.id);
+const suivante = realisations[index + 1];
+
+const libelleStatut = {
+  production: 'En production',
+  livre: 'Livré',
+  archive: 'Archivé',
+} as const;
+---
+
+<Base titre={`${d.titre} — Ali Freddy Kouadio`} description={d.resume} noindex>
+  <article>
+    <header class="page fiche__tete">
+      <a class="retour" href="/realisations">← Toutes les réalisations</a>
+
+      <p class="label">{d.client}</p>
+      <h1>{d.titre}</h1>
+      <p class="fiche__resume">{d.resume}</p>
+
+      <dl class="meta">
+        <div>
+          <dt>Rôle</dt>
+          <dd>{d.role}</dd>
+        </div>
+        <div>
+          <dt>Période</dt>
+          <dd>{d.periode}</dd>
+        </div>
+        <div>
+          <dt>Statut</dt>
+          <dd>{libelleStatut[d.statut]}</dd>
+        </div>
+        {
+          d.lien && (
+            <div>
+              <dt>En ligne</dt>
+              <dd>
+                <a href={d.lien} target="_blank" rel="noopener noreferrer">
+                  {d.lienTexte ?? d.lien} ↗
+                </a>
+              </dd>
+            </div>
+          )
+        }
+      </dl>
+
+      <ul class="pile">
+        {d.stack.map((t) => <li>{t}</li>)}
+      </ul>
+    </header>
+
+    <div class="page fiche__corps">
+      <div class="prose contenu">
+        <Content />
+      </div>
+
+      <aside class="cote">
+        <div class="cote__bloc">
+          <h2>Le problème</h2>
+          <p>{d.probleme}</p>
+        </div>
+        <div class="cote__bloc">
+          <h2>Le résultat</h2>
+          <p>{d.resultat}</p>
+        </div>
+        <a class="cote__sortie" href="/api/acces">Fermer la session d’accès</a>
+      </aside>
+    </div>
+
+    {
+      suivante && (
+        <nav class="page suite" aria-label="Réalisation suivante">
+          <p class="label label--quiet">Réalisation suivante</p>
+          <a href={`/realisations/${suivante.id}`}>
+            {suivante.data.titre} <span aria-hidden="true">→</span>
+          </a>
+        </nav>
+      )
+    }
+  </article>
+</Base>
+
+<style>
+  .fiche__tete {
+    padding-block: 2rem clamp(2rem, 5vw, 3rem);
+  }
+
+  .retour {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--ink-2);
+    text-decoration: none;
+    margin-bottom: 2.25rem;
+  }
+
+  .retour:hover {
+    color: var(--accent-ink);
+  }
+
+  .fiche__tete h1 {
+    font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+    letter-spacing: -0.03em;
+    margin-block: 0.75rem 1rem;
+    max-width: 20ch;
+  }
+
+  .fiche__resume {
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+    color: var(--ink-2);
+    max-width: 62ch;
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+    column-gap: 2rem;
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .meta > div {
+    padding-block: 1rem 1.15rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .meta dt {
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 0.35rem;
+  }
+
+  .meta dd {
+    margin: 0;
+    font-size: 0.94rem;
+    color: var(--ink);
+  }
+
+  .meta a {
+    color: var(--accent-ink);
+    font-weight: 500;
+  }
+
+  .pile {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1.5rem;
+  }
+
+  .pile li {
+    font-family: var(--f-mono);
+    font-size: 0.73rem;
+    color: var(--primary);
+    background: var(--primary-soft);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  /* --- Corps --- */
+
+  .fiche__corps {
+    display: grid;
+    gap: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .contenu :global(h2) {
+    font-size: clamp(1.35rem, 2.8vw, 1.75rem);
+    margin-block: 2.75rem 0.9rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .contenu :global(h2:first-child) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .contenu :global(p) {
+    margin-bottom: 1.1rem;
+    color: var(--ink-2);
+  }
+
+  .contenu :global(strong) {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .contenu :global(ul),
+  .contenu :global(ol) {
+    display: grid;
+    gap: 0.55rem;
+    margin-bottom: 1.3rem;
+    padding-left: 1.35rem;
+  }
+
+  .contenu :global(li) {
+    color: var(--ink-2);
+    list-style: disc;
+  }
+
+  .contenu :global(ol li) {
+    list-style: decimal;
+  }
+
+  .contenu :global(code) {
+    font-family: var(--f-mono);
+    font-size: 0.86em;
+    background: var(--surface-2);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 0.08em 0.35em;
+    color: var(--ink);
+  }
+
+  .contenu :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.4rem;
+    font-size: 0.92rem;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .contenu :global(th),
+  .contenu :global(td) {
+    text-align: left;
+    padding: 0.6rem 0.85rem;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-2);
+  }
+
+  .contenu :global(th) {
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 500;
+  }
+
+  /* --- Colonne latérale --- */
+
+  .cote {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+  }
+
+  .cote__bloc {
+    background: var(--surface-2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: 1.2rem 1.35rem;
+  }
+
+  .cote__bloc h2 {
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: 0.6rem;
+  }
+
+  .cote__bloc p {
+    font-size: 0.92rem;
+    color: var(--ink-2);
+  }
+
+  .cote__sortie {
+    font-size: 0.84rem;
+    color: var(--ink-3);
+    text-decoration: none;
+    justify-self: start;
+  }
+
+  .cote__sortie:hover {
+    color: var(--accent-ink);
+    text-decoration: underline;
+  }
+
+  /* --- Suite --- */
+
+  .suite {
+    display: grid;
+    gap: 0.4rem;
+    padding-block: 2rem 1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .suite a {
+    font-family: var(--f-display);
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: var(--primary);
+  }
+
+  .suite a:hover {
+    color: var(--accent-ink);
+  }
+
+  @media (min-width: 1000px) {
+    .fiche__corps {
+      grid-template-columns: minmax(0, 1fr) 20rem;
+      gap: 4rem;
+    }
+
+    .cote {
+      position: sticky;
+      top: 6rem;
+    }
+  }
+</style>

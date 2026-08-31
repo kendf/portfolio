@@ -1,0 +1,226 @@
+---
+import { identite } from '../data/profil';
+
+const { pathname } = Astro.url;
+const actif = (base: string) =>
+  base === '/' ? pathname === '/' : pathname.startsWith(base);
+
+const liens = [
+  { href: '/realisations', texte: 'Réalisations' },
+  { href: '/a-propos', texte: 'À propos' },
+  { href: '/contact', texte: 'Contact' },
+];
+---
+
+<header class="entete">
+  <div class="page entete__inner">
+    <a href="/" class="marque" aria-label="Accueil">
+      <span class="marque__glyphe" aria-hidden="true"></span>
+      <span class="marque__texte">{identite.initiales}</span>
+    </a>
+
+    <nav class="nav" aria-label="Navigation principale">
+      {
+        liens.map((l) => (
+          <a href={l.href} class:list={['nav__lien', { 'nav__lien--actif': actif(l.href) }]}>
+            {l.texte}
+          </a>
+        ))
+      }
+      <a class="nav__cv" href={identite.cv} download>CV</a>
+    </nav>
+
+    <!-- Menu mobile : élément <details>, accessible au clavier, sans JavaScript. -->
+    <details class="menu">
+      <summary class="menu__bouton" aria-label="Ouvrir le menu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </summary>
+      <div class="menu__panneau">
+        {
+          liens.map((l) => (
+            <a href={l.href} class:list={['menu__lien', { 'menu__lien--actif': actif(l.href) }]}>
+              {l.texte}
+            </a>
+          ))
+        }
+        <a class="menu__lien" href={identite.cv} download>Télécharger le CV</a>
+      </div>
+    </details>
+  </div>
+</header>
+
+<style>
+  .entete {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--ground) 88%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .entete__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 4.25rem;
+  }
+
+  /* --- Marque --- */
+
+  .marque {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+  }
+
+  .marque__glyphe {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 0.42rem;
+    background: var(--primary);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .marque__glyphe::before {
+    content: '';
+    position: absolute;
+    inset: 22% 22% 0 0;
+    background: var(--accent);
+    border-top-left-radius: 100%;
+    transform: translate(22%, 22%);
+  }
+
+  /* --- Navigation large --- */
+
+  .nav {
+    display: none;
+    align-items: center;
+    gap: 1.75rem;
+  }
+
+  .nav__lien {
+    text-decoration: none;
+    font-size: 0.94rem;
+    font-weight: 500;
+    color: var(--ink-2);
+    padding-block: 0.35rem;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .nav__lien:hover {
+    color: var(--ink);
+    border-bottom-color: var(--rule-strong);
+  }
+
+  .nav__lien--actif {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+  }
+
+  .nav__cv {
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--primary);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    padding: 0.45rem 0.95rem;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .nav__cv:hover {
+    background: var(--primary-soft);
+    border-color: var(--primary);
+  }
+
+  /* --- Menu mobile --- */
+
+  .menu {
+    position: relative;
+  }
+
+  .menu__bouton {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 2.75rem;
+    height: 2.5rem;
+    padding: 0 0.6rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: var(--surface);
+  }
+
+  .menu__bouton::-webkit-details-marker {
+    display: none;
+  }
+
+  .menu__bouton span {
+    display: block;
+    height: 2px;
+    background: var(--ink);
+    border-radius: 2px;
+  }
+
+  .menu[open] .menu__bouton {
+    border-color: var(--primary);
+  }
+
+  .menu__panneau {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.6rem);
+    min-width: 15rem;
+    display: grid;
+    background: var(--surface);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .menu__lien {
+    text-decoration: none;
+    font-size: 0.98rem;
+    font-weight: 500;
+    color: var(--ink-2);
+    padding: 0.85rem 1.1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .menu__lien:last-child {
+    border-bottom: none;
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .menu__lien--actif {
+    color: var(--ink);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+
+  @media (min-width: 800px) {
+    .nav {
+      display: flex;
+    }
+
+    .menu {
+      display: none;
+    }
+  }
+</style>

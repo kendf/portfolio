@@ -1,0 +1,231 @@
+---
+import Base from '../layouts/Base.astro';
+import { identite } from '../data/profil';
+---
+
+<Base
+  titre="Contact — Ali Freddy Kouadio"
+  description="Écrire à Ali Freddy Kouadio, développeur mobile et web à Yamoussoukro. Disponible pour des missions sur place ou à distance."
+>
+  <section class="page contact">
+    <div class="contact__principal">
+      <p class="label">Contact</p>
+      <h1>Écrivez-moi.</h1>
+      <p class="contact__intro">
+        Une mission, un produit à cadrer, un accès aux fiches détaillées de mes
+        réalisations&nbsp;: la meilleure porte d’entrée reste l’e-mail. Je réponds sous
+        deux jours ouvrés.
+      </p>
+
+      <div class="coord">
+        <div class="coord__ligne">
+          <p class="coord__label">E-mail</p>
+          <button type="button" class="reveler" data-code={identite.emailEncode} data-type="email">
+            Afficher l’adresse
+          </button>
+        </div>
+
+        <div class="coord__ligne">
+          <p class="coord__label">Téléphone · WhatsApp</p>
+          <button type="button" class="reveler" data-code={identite.telephoneEncode} data-type="tel">
+            Afficher le numéro
+          </button>
+        </div>
+
+        <div class="coord__ligne">
+          <p class="coord__label">GitHub</p>
+          <p class="coord__valeur">
+            <a href={identite.github} target="_blank" rel="noopener noreferrer">
+              {identite.githubTexte} ↗
+            </a>
+          </p>
+        </div>
+
+        <div class="coord__ligne">
+          <p class="coord__label">LinkedIn</p>
+          <p class="coord__valeur">{identite.linkedin}</p>
+        </div>
+
+        <div class="coord__ligne">
+          <p class="coord__label">Où je suis</p>
+          <p class="coord__valeur">{identite.ville}</p>
+        </div>
+      </div>
+
+      <p class="note">
+        Mes coordonnées ne figurent pas en clair dans le code de la page&nbsp;: elles
+        s’affichent au clic, ce qui écarte les moissonneurs d’adresses sans gêner
+        personne.
+      </p>
+    </div>
+
+    <aside class="contact__cote">
+      <div class="encart">
+        <h2>Accès aux fiches détaillées</h2>
+        <p>
+          Les fiches complètes de mes réalisations décrivent l’architecture de systèmes
+          appartenant à mes clients. Demandez-moi le mot de passe en précisant qui vous
+          êtes&nbsp;: je le transmets sans formalité.
+        </p>
+        <a href="/realisations">Voir l’index public →</a>
+      </div>
+
+      <div class="encart encart--cv">
+        <h2>Curriculum vitæ</h2>
+        <p>Parcours, formation et compétences en une page.</p>
+        <a href={identite.cv} download>Télécharger le CV (PDF)</a>
+      </div>
+    </aside>
+  </section>
+</Base>
+
+<script>
+  // Les coordonnées sont décodées à la demande, jamais présentes en clair
+  // dans le HTML livré.
+  document.querySelectorAll<HTMLButtonElement>('.reveler').forEach((bouton) => {
+    bouton.addEventListener('click', () => {
+      const code = bouton.dataset.code;
+      const type = bouton.dataset.type;
+      if (!code) return;
+
+      const valeur = atob(code);
+      const lien = document.createElement('a');
+      lien.className = 'coord__valeur coord__valeur--lien';
+      lien.href = type === 'email' ? `mailto:${valeur}` : `tel:${valeur.replace(/\s/g, '')}`;
+      lien.textContent = valeur;
+      bouton.replaceWith(lien);
+    });
+  });
+</script>
+
+<style>
+  .contact {
+    display: grid;
+    gap: 3rem;
+    padding-block: clamp(3rem, 8vw, 5rem) 2rem;
+  }
+
+  .contact h1 {
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+    letter-spacing: -0.03em;
+    margin-block: 0.9rem 1.1rem;
+  }
+
+  .contact__intro {
+    color: var(--ink-2);
+    max-width: 52ch;
+    font-size: 1.05rem;
+  }
+
+  .coord {
+    display: grid;
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .coord__ligne {
+    display: grid;
+    gap: 0.35rem;
+    padding-block: 1.05rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .coord__label {
+    font-family: var(--f-mono);
+    font-size: 0.69rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .coord__valeur {
+    font-size: 1.02rem;
+    color: var(--ink);
+  }
+
+  .coord__valeur a,
+  :global(.coord__valeur--lien) {
+    color: var(--primary);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .coord__valeur a:hover,
+  :global(.coord__valeur--lien:hover) {
+    color: var(--accent-ink);
+    text-decoration: underline;
+  }
+
+  .reveler {
+    justify-self: start;
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--primary-soft);
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    padding: 0.45rem 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+
+  .reveler:hover {
+    border-color: var(--primary);
+  }
+
+  .note {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--ink-3);
+    max-width: 52ch;
+  }
+
+  .contact__cote {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+  }
+
+  .encart {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+
+  .encart--cv {
+    background: var(--surface-2);
+    border-color: var(--rule-strong);
+  }
+
+  .encart h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .encart p {
+    font-size: 0.92rem;
+    color: var(--ink-2);
+    margin-bottom: 1rem;
+  }
+
+  .encart a {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .encart a:hover {
+    color: var(--accent-ink);
+    text-decoration: underline;
+  }
+
+  @media (min-width: 900px) {
+    .contact {
+      grid-template-columns: minmax(0, 1fr) 20rem;
+      gap: 4rem;
+    }
+  }
+</style>

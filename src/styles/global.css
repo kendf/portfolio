@@ -1,0 +1,197 @@
+/* =========================================================================
+   Portfolio Ali Freddy Kouadio — direction « Latérite »
+   Vert forêt + terre de latérite sur fond os. Thème clair unique.
+   ========================================================================= */
+
+@import '@fontsource-variable/fraunces';
+@import '@fontsource/public-sans/400.css';
+@import '@fontsource/public-sans/500.css';
+@import '@fontsource/public-sans/600.css';
+@import '@fontsource/public-sans/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+:root {
+  color-scheme: light;
+
+  /* --- Fonds --------------------------------------------------------- */
+  --ground: #fbf8f4;        /* os */
+  --surface: #fffdfb;
+  --surface-2: #f5efe7;     /* sable */
+  --surface-3: #efe6da;
+
+  /* --- Encres (toutes ≥ 4,5:1 sur --ground) --------------------------- */
+  --ink: #1a1512;           /* 17,0:1  */
+  --ink-2: #55493f;         /*  8,2:1  */
+  --ink-3: #7a6d62;         /*  4,8:1  */
+
+  /* --- Traits --------------------------------------------------------- */
+  --rule: #e6ded4;
+  --rule-strong: #d2c6b8;
+
+  /* --- Vert forêt : couleur d'action ---------------------------------- */
+  --primary: #12463c;       /* 10,1:1 sur --ground */
+  --primary-hover: #0b312a;
+  --primary-soft: #e4ede9;
+  --on-primary: #fbf8f4;
+
+  /* --- Latérite : accent éditorial ------------------------------------ */
+  --accent: #c2542a;        /* 4,3:1 — surfaces, filets, gros titres */
+  --accent-ink: #a8431f;    /* 5,7:1 — texte d'accent en petit corps */
+  --accent-soft: #f7e9e1;
+
+  /* --- Sémantique ------------------------------------------------------ */
+  --live: #1d6b4f;
+  --live-soft: #e0ede7;
+  --archive: #7a6d62;
+
+  /* --- Typographie ----------------------------------------------------- */
+  --f-display: 'Fraunces Variable', Fraunces, Georgia, 'Times New Roman', serif;
+  --f-body: 'Public Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+
+  /* --- Rythme ---------------------------------------------------------- */
+  --gutter: clamp(1.25rem, 5vw, 3.5rem);
+  --measure: 66ch;
+  --page: 1160px;
+  --radius: 6px;
+  --shadow: 0 1px 2px rgb(26 21 18 / 5%), 0 14px 32px -18px rgb(26 21 18 / 22%);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-variation-settings: 'SOFT' 0, 'WONK' 0;
+  letter-spacing: -0.018em;
+  line-height: 1.12;
+  text-wrap: balance;
+  /* Filet de sécurité : un titre ne doit jamais élargir la page. */
+  overflow-wrap: break-word;
+}
+
+p {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+/* --- Utilitaires partagés ---------------------------------------------- */
+
+.page {
+  width: 100%;
+  max-width: var(--page);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.prose {
+  max-width: var(--measure);
+}
+
+.label {
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.label--quiet {
+  color: var(--ink-3);
+}
+
+.saut {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--primary);
+  color: var(--on-primary);
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  border-radius: 0 0 var(--radius) 0;
+}
+
+.saut:focus {
+  left: 0;
+}
+
+.visuallyhidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
