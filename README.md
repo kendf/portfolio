@@ -77,6 +77,9 @@ statut: "production"      # production | livre | archive
 lien: "https://exemple.com"   # facultatif
 lienTexte: "exemple.com"      # facultatif
 phare: true               # remonte en tête de l'index et sur l'accueil
+captures:                 # facultatif, voir ci-dessous
+  - fichier: "01-accueil"
+    legende: "Ce que montre l'écran, en une phrase."
 ---
 
 ## Le contexte
@@ -85,6 +88,23 @@ Le détail, protégé par mot de passe.
 
 Le schéma est validé au build : une faute de frappe dans un champ fait échouer
 `npm run build` plutôt que de passer en production.
+
+### Ajouter des captures d'écran
+
+1. Déposer les images dans `src/assets/realisations/<nom-du-fichier-md>/`,
+   en WebP, nommées `01-…`, `02-… ` pour fixer l'ordre.
+2. Les déclarer dans `captures`, `fichier` étant le nom **sans extension**.
+
+La `legende` sert aussi de texte alternatif : elle décrit ce que l'écran
+démontre, elle ne répète pas le nom du fichier.
+
+Les images vivent dans `src/assets/`, jamais dans `public/` : elles sont ainsi
+émises sous un nom haché et restent liées à la fiche protégée, au lieu d'être
+listables à la racine du site. Convertir avant de déposer :
+
+```bash
+node -e "require('sharp')('capture.png').webp({quality:88}).toFile('01-accueil.webp')"
+```
 
 ---
 
