@@ -26,6 +26,21 @@ const realisations = defineCollection({
     lien: z.url().optional(),
     lienTexte: z.string().optional(),
     phare: z.boolean().default(false),
+
+    /**
+     * Captures d'écran, privées comme le reste de la fiche. Chaque `fichier`
+     * désigne un nom (sans extension) dans
+     * `src/assets/realisations/<id de la fiche>/`. La légende sert aussi de
+     * texte alternatif : elle est écrite, jamais déduite du nom de fichier.
+     */
+    captures: z
+      .array(
+        z.object({
+          fichier: z.string(),
+          legende: z.string(),
+        }),
+      )
+      .default([]),
   }),
 });
 

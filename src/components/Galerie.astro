@@ -1,0 +1,101 @@
+---
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  /** Identifiant de la réalisation = nom du dossier dans src/assets/realisations/ */
+  slug: string;
+  captures: { fichier: string; legende: string }[];
+  titre?: string;
+}
+
+const { slug, captures, titre = 'Écrans' } = Astro.props;
+
+// Astro doit connaître les images au build : le motif du glob est donc littéral,
+// et le filtrage se fait ensuite sur le chemin.
+const toutes = import.meta.glob<{ default: ImageMetadata }>(
+  '/src/assets/realisations/**/*.{png,jpg,jpeg,webp,avif}',
+  { eager: true },
+);
+
+const images = captures
+  .map((c) => {
+    const chemin = Object.keys(toutes).find((k) =>
+      k.includes(`/realisations/${slug}/${c.fichier}.`),
+    );
+    return chemin ? { ...c, image: toutes[chemin]!.default } : null;
+  })
+  .filter((v): v is { fichier: string; legende: string; image: ImageMetadata } => v !== null);
+---
+
+{
+  images.length > 0 && (
+    <section class="galerie" aria-labelledby="galerie-titre">
+      <h2 id="galerie-titre">{titre}</h2>
+
+      <ul class="galerie__grille">
+        {/*
+          Balise <img> et non <Image> : les WebP sont déjà optimisés (moins de
+          85 Ko chacun) et affichés à 272 px au plus. Passer par astro:assets
+          ferait transiter chaque capture par le service d'images à l'exécution,
+          sur une page justement rendue à la demande. Ici, un simple fichier
+          statique au nom haché suffit.
+        */}
+        {images.map(({ image, legende }) => (
+          <li class="ecran">
+            <img
+              src={image.src}
+              alt={legende}
+              width={image.width}
+              height={image.height}
+              loading="lazy"
+              decoding="async"
+            />
+            <p>{legende}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .galerie {
+    margin-top: 3rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .galerie h2 {
+    font-size: clamp(1.35rem, 2.8vw, 1.75rem);
+    margin-bottom: 1.75rem;
+  }
+
+  .galerie__grille {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
+    gap: 2.25rem 1.75rem;
+  }
+
+  .ecran {
+    display: grid;
+    gap: 0.85rem;
+    justify-items: center;
+  }
+
+  /* Les maquettes ont un fond transparent : elles se posent directement sur
+     le papier, sans cadre qui doublerait celui du téléphone. */
+  .ecran img {
+    width: 100%;
+    max-width: 17rem;
+    height: auto;
+    filter: drop-shadow(0 14px 28px rgb(26 21 18 / 14%));
+  }
+
+  .ecran p {
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: var(--ink-2);
+    text-align: center;
+    max-width: 22ch;
+  }
+</style>

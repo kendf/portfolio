@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import Galerie from '../../components/Galerie.astro';
 
 // Rendu à la demande : c'est ce qui permet au middleware d'intercepter la
 // requête avant que le moindre octet de contenu privé ne soit produit.
@@ -72,8 +73,12 @@ const libelleStatut = {
     </header>
 
     <div class="page fiche__corps">
-      <div class="prose contenu">
-        <Content />
+      <div>
+        <div class="prose contenu">
+          <Content />
+        </div>
+
+        <Galerie slug={realisation.id} captures={d.captures} />
       </div>
 
       <aside class="cote">
