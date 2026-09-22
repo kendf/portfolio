@@ -15,6 +15,8 @@ stack:
   - "Express"
 domaines: ["Web", "Hôtellerie", "Bilingue"]
 statut: "production"
+lien: "https://hp-resort.ci"
+lienTexte: "hp-resort.ci"
 ---
 
 ## Le contexte

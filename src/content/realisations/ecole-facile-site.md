@@ -5,8 +5,8 @@ role: "Développeur web"
 periode: "Juillet — Août 2026"
 debut: "2026-07"
 resume: "Site public et annuaire de répétiteurs en rendu hybride, partageant le compte utilisateur et la base de données de l'application mobile."
-probleme: "L'application mobile n'était visible que par ceux qui la connaissaient déjà. Il fallait une porte d'entrée référencée, consultable sans installation, et un espace connecté accessible depuis un ordinateur."
-resultat: "Site en rendu hybride : contenu et pages légales pré-générés, annuaire et espace connecté rendus à la demande. Un compte créé sur le site est le même que dans l'application."
+probleme: "Les parents qui cherchent un prof ne savaient ni où commencer ni à qui faire confiance, tandis que les répétiteurs dépendaient du bouche-à-oreille pour se faire connaître. Il fallait un annuaire consultable sans installer l'application, avec des fiches contrôlées et une recherche par matière et par localité."
+resultat: "Un annuaire public consultable sans installer l'application, avec recherche par matière, niveau, commune et tarif, des profils dont l'identité, le diplôme et la photo sont contrôlés avant publication, et un compte partagé avec l'application mobile."
 stack:
   - "Astro 7"
   - "TypeScript"
@@ -15,8 +15,8 @@ stack:
   - "Vercel"
 domaines: ["Web", "Référencement", "Éducation"]
 statut: "production"
-lien: "https://www.ecolefacil.com"
-lienTexte: "ecolefacil.com"
+lien: "https://www.ecolefacile.ci"
+lienTexte: "ecolefacile.ci"
 captures:
   - fichier: "01-accueil"
     legende: "Accueil : la recherche par matière et par commune est le premier élément de la page, avant tout discours."

@@ -19,6 +19,8 @@ stack:
   - "Inno Setup"
 domaines: ["Mobile", "Desktop", "Infrastructure"]
 statut: "production"
+lien: "http://160.154.183.87:9000/download.html?app=hotel_president"
+lienTexte: "Accédez au portail"
 phare: true
 ---
 

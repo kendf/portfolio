@@ -6,7 +6,7 @@ periode: "Juin — Août 2026"
 debut: "2026-06"
 resume: "Application de mise en relation entre parents d'élèves et répétiteurs certifiés, avec recherche par localité et messagerie intégrée."
 probleme: "Trouver un répétiteur fiable passe par le bouche-à-oreille. Les parents n'ont aucun moyen de vérifier un profil, et les bons répétiteurs n'ont aucune vitrine."
-resultat: "MVP de mise en relation vérifiée : profil de répétiteur documenté, certification par l'administration, recherche par matière et par ville, échange direct parent-répétiteur dans l'application."
+resultat: "Profils de répétiteurs documentés puis certifiés par l'administration, recherche par matière et par ville, et échange direct entre parents et répétiteurs dans l'application. La version mobile est actuellement en évaluation sur Google Play, avec une mise à disposition prévue d'ici la fin du mois."
 stack:
   - "Flutter"
   - "Dart"
@@ -14,7 +14,7 @@ stack:
   - "GoRouter"
   - "Supabase"
 domaines: ["Mobile", "Marketplace", "Éducation"]
-statut: "production"
+statut: "livre"
 ---
 
 ## Le contexte
@@ -26,17 +26,16 @@ ou avec une solution qu'il ne peut pas évaluer.
 ## Le cadrage
 
 La première version du produit visait large : contrats, abonnements, paiements,
-reversements. Elle a été volontairement ramenée à un **MVP de mise en relation
-vérifiée**, quatre parcours seulement :
+reversements. Elle a été volontairement recentrée sur quatre parcours :
 
 1. un parent trouve un répétiteur fiable ;
 2. un répétiteur remplit un profil clair et vérifiable ;
 3. l'administration certifie le répétiteur ;
 4. les deux échangent dans l'application.
 
-Tout le transactionnel est repoussé en post-MVP. C'est la décision produit la
-plus structurante du projet : sans confiance, il n'y a pas de transaction à
-sécuriser.
+Les contrats, abonnements, paiements et reversements restent hors du premier
+lancement. C'est la décision produit la plus structurante du projet : sans
+confiance, il n'y a pas de transaction à sécuriser.
 
 ## Les décisions qui comptent
 

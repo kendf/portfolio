@@ -14,7 +14,7 @@ stack:
   - "GoRouter"
   - "Supabase"
 domaines: ["Mobile", "Gestion documentaire"]
-statut: "livre"
+statut: "production"
 ---
 
 ## Le contexte
