@@ -3,4 +3,4 @@ dist/
 .astro/
 .vercel/
 .env
-.env.local
+.env.example
